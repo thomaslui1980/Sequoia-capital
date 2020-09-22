@@ -51,10 +51,11 @@ app.get("/", function (req, res) {
 
 app.post("/get_short_url", async function (req, res) {
     try {
-        URL.parse(req)
         console.log("The request body is:" + req.body)
-        debugger
         let full_url = req.body.full_url;
+        if (full_url === undefined) {
+            res.status(500).json({ error: 'The full url is necessary!' })
+        }
         console.log("The request body is:" + req.body.full_url);
         let shorturl = '';
         shorturl = await urloperator.saveUrl(full_url);
@@ -76,8 +77,9 @@ app.post("/get_full_url", async function (req, res) {
     try {
         console.log("The request body is:" + req.body);
         let short_url = req.body.short_url;
-        debugger
-        // console.log("The request body is:" + req.body.short_url)
+        if (short_url === undefined) {
+            res.status(500).json({ error: 'The short url is necessary!' })
+        }
         let urlInfo = await urloperator.getFullUrl(short_url);
         if (urlInfo != null && urlInfo != '') {
             res.json({
@@ -95,9 +97,6 @@ app.post("/get_full_url", async function (req, res) {
 app.post("/get_url_list", async function (req, res) {
     try {
         console.log("The request body is:" + req.body);
-        let short_url = req.body.short_url;
-        debugger
-        // console.log("The request body is:" + req.body.short_url)
         let urlInfo = await urloperator.getUrlList();
         if (urlInfo != null && urlInfo != '' && urlInfo.length > 0) {
             res.json({
