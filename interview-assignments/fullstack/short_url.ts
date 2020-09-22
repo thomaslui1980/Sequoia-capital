@@ -1,5 +1,8 @@
 "use strict";
 import { urlDBOperation } from "./database"
+import * as URL from "url"
+import { UrlObject } from "./entity/urlObject";
+import { url } from "inspector";
 process.on('unhandledRejection', (reason, p) => {
     console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
     // application specific logging, throwing an error, or other logic here
@@ -47,50 +50,67 @@ app.get("/", function (req, res) {
 })
 
 app.post("/get_short_url", async function (req, res) {
-    console.log("The request body is:" + req.body)
-    debugger
-    let full_url = req.body.full_url;
-    console.log("The request body is:" + req.body.full_url);
-    let shorturl = '';
-    shorturl = await urloperator.saveUrl(full_url);
-    if (shorturl != '' && shorturl != undefined) {
-        res.json({
-            shorturl: shorturl
-        })
-    } else {
+    try {
+        URL.parse(req)
+        console.log("The request body is:" + req.body)
+        debugger
+        let full_url = req.body.full_url;
+        console.log("The request body is:" + req.body.full_url);
+        let shorturl = '';
+        shorturl = await urloperator.saveUrl(full_url);
+        if (shorturl != '' && shorturl != undefined) {
+            res.json({
+                shorturl: shorturl
+            })
+        } else {
+            res.status(500).json({ error: 'get short url failed!' })
+        }
+    } catch (error) {
+        console.error("The error in the get short url is: " + error)
         res.status(500).json({ error: 'get short url failed!' })
     }
+
 })
 
 app.post("/get_full_url", async function (req, res) {
-    console.log("The request body is:" + req.body);
-    let short_url = req.body.short_url;
-    debugger
-    // console.log("The request body is:" + req.body.short_url)
-    let urlInfo = await urloperator.getFullUrl(short_url);
-    if (urlInfo != null && urlInfo != '') {
-        res.json({
-            msg: urlInfo.fullurl
-        })
-    } else {
+    try {
+        console.log("The request body is:" + req.body);
+        let short_url = req.body.short_url;
+        debugger
+        // console.log("The request body is:" + req.body.short_url)
+        let urlInfo = await urloperator.getFullUrl(short_url);
+        if (urlInfo != null && urlInfo != '') {
+            res.json({
+                msg: urlInfo.fullurl
+            })
+        } else {
+            res.status(500).json({ error: 'get full url failed!' })
+        }
+    } catch (error) {
+        console.error("The error in the get full url is: " + error)
         res.status(500).json({ error: 'get full url failed!' })
     }
-
 })
 
 app.post("/get_url_list", async function (req, res) {
-    console.log("The request body is:" + req.body);
-    let short_url = req.body.short_url;
-    debugger
-    // console.log("The request body is:" + req.body.short_url)
-    let urlInfo = await urloperator.getUrlList();
-    if (urlInfo != null && urlInfo != '' && urlInfo.length > 0) {
-        res.json({
-            msg: urlInfo
-        })
-    } else {
+    try {
+        console.log("The request body is:" + req.body);
+        let short_url = req.body.short_url;
+        debugger
+        // console.log("The request body is:" + req.body.short_url)
+        let urlInfo = await urloperator.getUrlList();
+        if (urlInfo != null && urlInfo != '' && urlInfo.length > 0) {
+            res.json({
+                msg: urlInfo
+            })
+        } else {
+            res.status(500).json({ error: 'get url list failed!' })
+        }
+    } catch (error) {
+        console.error("The error in the get url list is: " + error)
         res.status(500).json({ error: 'get url list failed!' })
     }
+
 
 })
 
