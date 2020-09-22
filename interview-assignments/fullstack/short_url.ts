@@ -58,14 +58,16 @@ app.post("/get_short_url", async function (req, res) {
         }
         console.log("The request body is:" + req.body.full_url);
         let shorturl = '';
-        shorturl = await urloperator.saveUrl(full_url);
-        if (shorturl != '' && shorturl != undefined) {
-            res.json({
-                shorturl: shorturl
+        urloperator.saveUrl(full_url)
+            .then((res) => {
+                console.log("the invoke success")
+                res.json({
+                    shorturl: res.shorturl
+                })
             })
-        } else {
-            res.status(500).json({ error: 'get short url failed!' })
-        }
+            .catch((err) => {
+                res.status(500).json({ error: 'get short url failed!' })
+            })
     } catch (error) {
         console.error("The error in the get short url is: " + error)
         res.status(500).json({ error: 'get short url failed!' })
@@ -80,14 +82,16 @@ app.post("/get_full_url", async function (req, res) {
         if (short_url === undefined) {
             res.status(500).json({ error: 'The short url is necessary!' })
         }
-        let urlInfo = await urloperator.getFullUrl(short_url);
-        if (urlInfo != null && urlInfo != '') {
-            res.json({
-                msg: urlInfo.fullurl
+        urloperator.getFullUrl(short_url)
+            .then((res) => {
+                console.log("the invoke success")
+                res.json({
+                    msg: res.fullurl
+                })
             })
-        } else {
-            res.status(500).json({ error: 'get full url failed!' })
-        }
+            .catch((err) => {
+                res.status(500).json({ error: 'get full url failed!' })
+            })
     } catch (error) {
         console.error("The error in the get full url is: " + error)
         res.status(500).json({ error: 'get full url failed!' })
@@ -97,14 +101,16 @@ app.post("/get_full_url", async function (req, res) {
 app.post("/get_url_list", async function (req, res) {
     try {
         console.log("The request body is:" + req.body);
-        let urlInfo = await urloperator.getUrlList();
-        if (urlInfo != null && urlInfo != '' && urlInfo.length > 0) {
-            res.json({
-                msg: urlInfo
+        urloperator.getUrlList()
+            .then((res) => {
+                console.log("the invoke success")
+                res.json({
+                    msg: res
+                })
             })
-        } else {
-            res.status(500).json({ error: 'get url list failed!' })
-        }
+            .catch((err) => {
+                res.status(500).json({ error: 'get url list failed!' })
+            })
     } catch (error) {
         console.error("The error in the get url list is: " + error)
         res.status(500).json({ error: 'get url list failed!' })
