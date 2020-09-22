@@ -59,10 +59,10 @@ app.post("/get_short_url", async function (req, res) {
         console.log("The request body is:" + req.body.full_url);
         let shorturl = '';
         urloperator.saveUrl(full_url)
-            .then((res) => {
-                console.log("the invoke success")
+            .then((response) => {
+                console.log("the invoke success, the response is: " + res)
                 res.json({
-                    shorturl: res.shorturl
+                    shorturl: response
                 })
             })
             .catch((err) => {
@@ -83,10 +83,10 @@ app.post("/get_full_url", async function (req, res) {
             res.status(500).json({ error: 'The short url is necessary!' })
         }
         urloperator.getFullUrl(short_url)
-            .then((res) => {
-                console.log("the invoke success")
+            .then((response) => {
+                console.log("the invoke success, and the response is: " + response)
                 res.json({
-                    msg: res.fullurl
+                    fullurl: response.fullurl
                 })
             })
             .catch((err) => {
@@ -102,10 +102,10 @@ app.post("/get_url_list", async function (req, res) {
     try {
         console.log("The request body is:" + req.body);
         urloperator.getUrlList()
-            .then((res) => {
-                console.log("the invoke success")
+            .then((response) => {
+                console.log("the invoke success, and the response is: " + response)
                 res.json({
-                    msg: res
+                    msg: response
                 })
             })
             .catch((err) => {
